@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Random User App</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,16 +11,18 @@
     }
 
     .user-card {
-      max-width: 300px;
+      width: 300px;
     }
 
     img {
       width: 120px;
       border-radius: 4px;
+      display: block;
+      margin-bottom: 10px;
     }
 
     h2 {
-      margin: 10px 0;
+      margin: 5px 0 10px;
     }
 
     button {
@@ -29,8 +32,9 @@
     }
 
     #additionalInfo {
-      margin-top: 15px;
+      margin-top: 10px;
       font-weight: bold;
+      min-height: 20px;
     }
   </style>
 </head>
@@ -60,12 +64,14 @@
 
     let currentUser = null;
 
+    // Fetch random user
     async function fetchUser() {
       const response = await fetch("https://randomuser.me/api/");
       const data = await response.json();
+
       currentUser = data.results[0];
 
-      // Set name and image
+      // Display name and image
       userName.textContent =
         currentUser.name.first + " " + currentUser.name.last;
       userImage.src = currentUser.picture.large;
@@ -74,11 +80,21 @@
       additionalInfo.textContent = "";
     }
 
-    // Button click handler for Age, Email, Phone
+    // Handle Age / Email / Phone buttons
     document.addEventListener("click", function (e) {
-      if (e.target.dataset.attr && currentUser) {
-        const attr = e.target.dataset.attr;
-        additionalInfo.textContent = currentUser[attr];
+      if (!e.target.dataset.attr || !currentUser) return;
+
+      const attr = e.target.dataset.attr;
+
+      // Clear previous info
+      additionalInfo.textContent = "";
+
+      if (attr === "age") {
+        additionalInfo.textContent = currentUser.dob.age;
+      } else if (attr === "email") {
+        additionalInfo.textContent = currentUser.email;
+      } else if (attr === "phone") {
+        additionalInfo.textContent = currentUser.phone;
       }
     });
 
@@ -91,3 +107,4 @@
 
 </body>
 </html>
+
